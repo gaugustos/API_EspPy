@@ -1,11 +1,16 @@
 import mariadb
 import sys
+import os
+
+# Login information
+user1 = os.environ.get('DB_Automation_User')
+password1 = os.environ.get('DB_Automation_PASSWD')
 
 # Connect to MariaDB Platform
 try:
     conn = mariadb.connect(
-        user="UserAutomation",
-        password="12D!09b@",
+        user = user1,
+        password = password1,
         host="192.168.15.2",
         port=3306,
         database="automationDB"
@@ -33,7 +38,7 @@ def ReadDB():
     pass
 
 
-def DBwrite(data):
+def DBwrite(DataInput):
 
 #    cur.execute("CREATE TABLE output (ID_User VARCHAR(30),ID_Board VARCHAR(30), HASH VARCHAR(30))");
 
@@ -43,14 +48,26 @@ def DBwrite(data):
 #   query = f"INSERT INTO PRODUCT (PRODUCT_ID, price,PRODUCT_TYPE) VALUES ('{PRODUCT_ID}', '{price}', '{PRODUCT_TYPE}')"
   #  print(data["ID_User"])
 
-    print(len(data))
-    JSON_Keys = data.keys()
-    print(data[key])
+    print(len(DataInput))
+    JSON_Keys = DataInput.keys()
+
+
+    print(type(JSON_Keys))
+
+    DataInputKeys = list()
+    for i in DataInput.keys():
+        DataInputKeys.append(i)
+
+    print(DataInputKeys[1])
+
+    #query = 
   
-    ID_User1 = data["ID_User"]
-    ID_BD1 = data["ID_Board"]
-    HASH1 = data["HASH"]
-    Output1 = data["ID_Output"]
+    ID_User1 = DataInput["ID_User"]
+    ID_BD1 = DataInput["ID_Board"]
+    HASH1 = DataInput["HASH"]
+    Output1 = DataInput["ID_Output"]
+
+
 
    # query = f"INSERT INTO output (ID_User ,ID_Board , HASH, ID_Output ) VALUES ('{ID_User1}', '{ID_BD1}','{HASH1}','{Output1}')"
   #  cur.execute(query)
