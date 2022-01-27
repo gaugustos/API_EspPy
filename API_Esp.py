@@ -14,7 +14,7 @@ def homepage():
     return "render_template"
 
 
-@app.route('/GET_Output_Staus', methods =['POST'])
+@app.route('/GET_Output_Staus', methods =['GET'])
 
 #       Recive
 #   ID_User
@@ -22,21 +22,27 @@ def homepage():
 #   HASH
 
 #       Output
-#   JSON - {"OUTPUT[x]" : "value"}
+#   JSON - {
+#            ID_Outputs         : Value 
+#            Value_Sensor_1     : Value
+#            Value_Sensor_2     : Value
+#            Value_Sensor_3     : Value
+#            Last_Update        : Value
+# }
 
 def GetOutputStatus():
 
     Data = request.get_json()
-    #print(Data)
+    print(Data)
     
-    confirmation = ConfirmRequestData(Data["ID_User"], Data["ID_Board"], Data["HASH"])
+    #confirmation = ConfirmRequestData(Data["ID_User"], Data["ID_Board"], Data["HASH"])
 
-    if(ConfirmRequestData(confirmation)):
+   # if(ConfirmRequestData(confirmation)):
 
-        DBanswer = ReadDB(Data["ID_Board"])
-
-        return DBanswer
-    #return "OK"
+  #      DBanswer = ReadDB(Data["ID_Board"])
+#
+  #      return DBanswer
+    return "OK"
 
 
 @app.route('/POST_Output_Staus', methods =['POST'])
@@ -45,11 +51,15 @@ def GetOutputStatus():
 #       Send
 #   ID_User
 #   ID_Board
-#   HASH
-#   Outputs
+#   ID_Outputs
+#   ID_HASH
+#   Value_Sensor_1
+#   Value_Sensor_2
+#   Value_Sensor_3
+#   Last_Update
 
 #       Output
-#   JSON - {"OUTPUT[x]" : "OK"}
+#   JSON - {"OK"}
 
 
 def PostOutputStatus():
@@ -58,7 +68,7 @@ def PostOutputStatus():
 
     print(Data)
     DBwrite(Data)
-    return "render_template"
+    return "ok"
 
     
 
