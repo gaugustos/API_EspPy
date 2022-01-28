@@ -66,7 +66,7 @@ def PostOutputStatus():
 
     Data = request.get_json()
 
-    print(Data)
+    #print(Data)
     DBwrite(Data)
     return "ok"
 
