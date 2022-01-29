@@ -45,5 +45,5 @@ Use:
 
 Improvements
 
-    V200 -> create a Auth system
+    V200 -> create a Auth system and use HTTPS
     V300 -> improve GET_Output_Staus to have the option to select what columns to read
