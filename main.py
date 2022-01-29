@@ -29,13 +29,6 @@ except mariadb.Error as ex:
 cur = conn.cursor()    
 
 
-
-
-tesadte ="kfkdsjgoijs"
-
-#cur.execute(f"ALTER TABLE AutomationProject ADD ({tesadte}) varchar(40)";)
-
-
 def ConfirmRequestData(data1, data2):
     
     print(data1)
@@ -44,70 +37,99 @@ def ConfirmRequestData(data1, data2):
     #return true
 
 
-def ReadDB():
-    pass
+def ReadDB(Data):
 
+    
+    DataInputvalues = list()
+    for i in Data.values():
+        DataInputvalues.append(i)
+
+    DBOutput ={}
+    DBOutputKey = list()
+
+    DBOutputKey = ["ID_Output", "Value_Sensor_1", "Value_Sensor_2", "Value_Sensor_3", "Last_Update"]
+
+    query = f"SELECT ID_Output, Value_Sensor_1, Value_Sensor_2, Value_Sensor_3, Last_Update FROM AutomationProject WHERE ID_User= '{DataInputvalues[0]}' and ID_Board= '{DataInputvalues[1]}' and ID_HASH= '{DataInputvalues[2]}';"
+   
+   
+    cur.execute(query)
+    
+    for (DBOutputKey) in cur:
+        DBOutput = DBOutputKey
+    
+    return DBOutput
 
 def DBwrite(DataInput):
 
-#    cur.execute("CREATE TABLE output (ID_User VARCHAR(30),ID_Board VARCHAR(30), HASH VARCHAR(30))");
-
-#    cur.execute("INSERT INTO output (ID_User, ID_Board,HASH ) VALUES ('1f51af65d16a5','g56s1g65s', 'fadfdafdas')")
-
-  
-#   query = f"INSERT INTO PRODUCT (PRODUCT_ID, price,PRODUCT_TYPE) VALUES ('{PRODUCT_ID}', '{price}', '{PRODUCT_TYPE}')"
-  #  print(data["ID_User"])
-
 
 # Get only the JSON keys and transfor to a list    
-    #print(len(DataInput))
     JSON_Keys = DataInput.keys()
-    #print(type(JSON_Keys))
+   
     DataInputKeys = list()
     for i in DataInput.keys():
         DataInputKeys.append(i)
 
-    print(DataInputKeys)
+   
 
-
-#get all title columns
+    #get all title columns
     cur.execute("select * from AutomationProject")
-    result = cur.fetchall()
     ColumsNames = [i[0] #put in ColumnsNames as cur.description with is the 0 possicion for every place
     for i in cur.description
     ]
 
-    print(ColumsNames)
 
     DB_Data = {}
 
-    for index in range (len(DataInputKeys)+1):
+    for index in range (len(DataInputKeys)):
 
         if DataInputKeys[index] == ColumsNames[index + 1]:
 
             DB_Data.update([( DataInputKeys[index] ,'"' + DataInput[DataInputKeys[index]] + '"' )])
+            
+      #  else: # DataInputKeys[index] != ColumsNames[index + 1]:
 
-            print(index)
-            
-        elif DataInputKeys[index] !=" ColumsNames[index + 1]":
-            
-            print("index")
-            print(index)
-            print(DataInputKeys[index])
 
-            #cur.execute(f"ALTER TABLE AutomationProject ADD {DataInputKeys[index]} VARCHAR(100) NOT NULL")
-            #conn.commit()
-            
-            DB_Data.update([( DataInputKeys[index] ,'"' + DataInput[DataInputKeys[index]] + '"' )])
-            
-        
-    query = f"INSERT INTO AutomationProject ({list(DB_Data.keys())}) VALUES ({(list(DB_Data.values()))})"
+    query = f"INSERT INTO AutomationProject ({list(DB_Data.keys())}) VALUES ({(list(DB_Data.values()))})";
     
     # Cleaning the striging for match the MySQL  standard
-    query1 = (query.replace("'" ,""))
+    query1 =(query.replace("'" ,""))
     query2 = (query1.replace("[" ,""))     
     query3 = (query2.replace("]" ,""))     
 
     cur.execute(query3)
     conn.commit()
 
+
+
+def DBcreate(DataInput):
+   
+    DataInputValue = list()
+    for i in DataInput.values():
+        DataInputValue.append(i)
+
+    DataInputKeys = list()
+    for x in DataInput.keys():
+        DataInputKeys.append(x)
+
+    query1 = list()
+
+    for i in range(1 ,len(DataInput)):
+
+        query1.append(f"{DataInputKeys[i]} {DataInputValue[i]}")
+
+    CleanText = CleanDB_String(query1)
+    
+    query = f"CREATE TABLE {DataInputValue[0]} ({CleanText})"
+
+    #query = "CREATE TABLE dsadadffhhkjjk"
+    print(query)
+    cur.execute(query)
+   
+    conn.commit()
+
+    
+def CleanDB_String(TEXT):
+    
+    string  = " ".join(TEXT)
+
+    return string  

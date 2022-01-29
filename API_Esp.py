@@ -1,9 +1,8 @@
 
-from operator import truediv
 from flask import Flask, request, jsonify
 
 
-from main import ConfirmRequestData ,ReadDB ,DBwrite
+from main import ReadDB ,DBwrite, DBcreate
 
 app = Flask(__name__)
 
@@ -33,17 +32,10 @@ def homepage():
 def GetOutputStatus():
 
     Data = request.get_json()
-    print(Data)
+
+    DBanswer = ReadDB(Data)
     
-    #confirmation = ConfirmRequestData(Data["ID_User"], Data["ID_Board"], Data["HASH"])
-
-   # if(ConfirmRequestData(confirmation)):
-
-  #      DBanswer = ReadDB(Data["ID_Board"])
-#
-  #      return DBanswer
-    return "OK"
-
+    return jsonify(DBanswer)
 
 @app.route('/POST_Output_Staus', methods =['POST'])
 
@@ -71,5 +63,21 @@ def PostOutputStatus():
     return "ok"
 
     
+@app.route('/DBcreate', methods =['POST'])
+
+
+#       Send
+#   Table : Name
+#   Column[x] : Type
+
+#       Output
+#   JSON - {"OK"}
+
+def PostDBcreate():
+  
+  Data = request.get_json()
+  DBcreate(Data)
+  return "OK"
+
 
 app.run()
